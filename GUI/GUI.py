@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QApplication,QMainWindow, QPushButton,QVBoxLayout,QWidget,QHBoxLayout,
-                             QStackedLayout)
+                             QStackedLayout, QTableView)
 from PyQt5.Qt import Qt
 
 class MainWindow(QMainWindow):
@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
         self.button6 = QPushButton()
         self.button6.setObjectName("button6")
         # Макет интерфейса
-        self.layout_window = QVBoxLayout
+        self.layout_window = QVBoxLayout()
         self.top_tab = QHBoxLayout()
         self.top_tab.addWidget(self.button1)
         self.top_tab.addWidget(self.button2)
@@ -30,8 +30,26 @@ class MainWindow(QMainWindow):
         self.top_tab.addWidget(self.button4)
         self.top_tab.addWidget(self.button5)
         self.top_tab.addWidget(self.button6)
-        self.bottom_tab = QStackedLayout
-        self.bottom_tab
+        self.layout_window.addLayout(self.top_tab)
+        self.bottom_tab = QStackedLayout()
+        self.tabl_vidget1 = QTableView()
+        self.tabl_vidget2 = QTableView()
+        self.tabl_vidget3 = QTableView()
+        self.tabl_vidget4 = QTableView()
+        self.tabl_vidget5 = QTableView()
+        self.tabl_vidget6 = QTableView()
+        self.bottom_tab.addWidget(self.tabl_vidget1)
+        self.bottom_tab.addWidget(self.tabl_vidget2)
+        self.bottom_tab.addWidget(self.tabl_vidget3)
+        self.bottom_tab.addWidget(self.tabl_vidget4)
+        self.bottom_tab.addWidget(self.tabl_vidget5)
+        self.bottom_tab.addWidget(self.tabl_vidget6)
+        self.layout_window.addLayout(self.bottom_tab)
+        self.centr_window = QWidget()
+        self.centr_window.setLayout(self.layout_window)
+        self.setCentralWidget(self.centr_window)
+
+
 
         self.name_object()
     def name_object(self):
