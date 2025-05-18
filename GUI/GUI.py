@@ -1,73 +1,62 @@
 import sys
-from PyQt5.QtWidgets import (QApplication,QMainWindow, QPushButton,QVBoxLayout,QWidget,QHBoxLayout,
-                             QStackedLayout, QTableView)
-from PyQt5.Qt import Qt
+from PyQt5.QtWidgets import (
+    QApplication, QMainWindow, QPushButton,
+    QVBoxLayout, QWidget, QHBoxLayout,
+    QStackedLayout, QTableView
+)
+from PyQt5.QtCore import Qt
 
 class MainWindow(QMainWindow):
     def __init__(self):
-        # Основные обекты интерфейса
         super().__init__()
-        self.setWindowTitle("Сырье,заявки,материалы")
-        self.setFixedSize(800,800)
-        self.button1 = QPushButton()
-        self.button1.setObjectName("button1")
-        self.button2 = QPushButton()
-        self.button2.setObjectName("button2")
-        self.button3 = QPushButton()
-        self.button3.setObjectName("button3")
-        self.button4 = QPushButton()
-        self.button4.setObjectName("button4")
-        self.button5 = QPushButton()
-        self.button5.setObjectName("button5")
-        self.button6 = QPushButton()
-        self.button6.setObjectName("button6")
+        self.setWindowTitle("Сырье, заявки, материалы")
+        self.setMinimumSize(800, 800)
+
+        # Кнопки
+        self.buttons = []
+        for i in range(7):
+            btn = QPushButton()
+            btn.setObjectName(f"button{i+1}")
+            btn.clicked.connect(lambda checked, index=i: self.bottom_tab.setCurrentIndex(index))
+            self.buttons.append(btn)
+
         # Макет интерфейса
         self.layout_window = QVBoxLayout()
         self.top_tab = QHBoxLayout()
-        self.top_tab.addWidget(self.button1)
-        self.top_tab.addWidget(self.button2)
-        self.top_tab.addWidget(self.button3)
-        self.top_tab.addWidget(self.button4)
-        self.top_tab.addWidget(self.button5)
-        self.top_tab.addWidget(self.button6)
+        for btn in self.buttons:
+            self.top_tab.addWidget(btn)
         self.layout_window.addLayout(self.top_tab)
+
+        # Нижняя часть со стеком таблиц
         self.bottom_tab = QStackedLayout()
-        self.tabl_vidget1 = QTableView()
-        self.tabl_vidget2 = QTableView()
-        self.tabl_vidget3 = QTableView()
-        self.tabl_vidget4 = QTableView()
-        self.tabl_vidget5 = QTableView()
-        self.tabl_vidget6 = QTableView()
-        self.bottom_tab.addWidget(self.tabl_vidget1)
-        self.bottom_tab.addWidget(self.tabl_vidget2)
-        self.bottom_tab.addWidget(self.tabl_vidget3)
-        self.bottom_tab.addWidget(self.tabl_vidget4)
-        self.bottom_tab.addWidget(self.tabl_vidget5)
-        self.bottom_tab.addWidget(self.tabl_vidget6)
+        self.table = []
+        for i in range(6):
+            table = QTableView()
+            table.setObjectName(f"table{i + 1}")
+            self.bottom_tab.addWidget(table)
         self.layout_window.addLayout(self.bottom_tab)
+
+        # Центральный виджет
         self.centr_window = QWidget()
         self.centr_window.setLayout(self.layout_window)
         self.setCentralWidget(self.centr_window)
 
-
-
+        # Названия кнопок
         self.name_object()
+
     def name_object(self):
         name_button = {
-            "button1": "Рецептуры",
-            "button2": "Наименование сырья 1С/Рецептур",
-            "button3": "Заявки обшая выработка по приказам",
-            "button4": "Наименование сырья Приказы",
-            "button5": "Задолжность РФ",
-            "button6": "Актуальность сырья и материалов по планам",
+            "button1": "Приказы/Планы",
+            "button2": "Поставки из РФ",
+            "button3": "Остатки по поставкам",
+            "button4": "Расчет плана",
+            "button5": "Наименование и номенклатура",
+            "button6": "Рецептура",
+            "button7": "Сводка"
         }
-
-        for btn in self.findChildren(QPushButton):
-            btn_name = btn.objectName()
-            if btn_name in name_button:
-                btn.setText(name_button[btn_name])
-            else:
-                btn.setText("имя не заданно")
+        for btn in self.buttons:
+            name = btn.objectName()
+            btn.setText(name_button.get(name, "имя не задано"))
 
 
 
