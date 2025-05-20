@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import (
     QStackedLayout, QTableView
 )
 from PyQt5.QtCore import Qt
+import Name_and_nomenclature
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -34,13 +35,15 @@ class MainWindow(QMainWindow):
             table = QTableView()
             table.setObjectName(f"table{i + 1}")
             self.bottom_tab.addWidget(table)
+            self.table.append(table)
         self.layout_window.addLayout(self.bottom_tab)
 
         # Центральный виджет
         self.centr_window = QWidget()
         self.centr_window.setLayout(self.layout_window)
         self.setCentralWidget(self.centr_window)
-
+        # Заполнение таблиц
+        Name_and_nomenclature.NameAndNomenclature(self.table[4])
         # Названия кнопок
         self.name_object()
 
