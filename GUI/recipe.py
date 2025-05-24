@@ -1,29 +1,71 @@
-class SimpleModel:
+from PyQt5.QtWidgets import (
+    QApplication, QMainWindow, QTableView, QComboBox,
+    QStyledItemDelegate, QVBoxLayout, QWidget, QHBoxLayout, QGridLayout, QLabel, QLineEdit, QPushButton, QDialog
+)
+from PyQt5.QtCore import Qt, QStringListModel
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
+import sys
+
+class WindowRecipe(QDialog):
     def __init__(self):
-        self._headers = ["Наменклатура", "Аналог_1", "Аналог_2"]
+        super().__init__()
+        self.setWindowTitle("Добавить рецептуру")
+        self.setMinimumSize(600, 800)
 
-    def headerData(self, section, orientation, role):
-        # Симулируем константы Qt (для простоты)
-        DisplayRole = 0
-        Horizontal = 1
-        Vertical = 2
+        self.layout_central = QVBoxLayout(self)
 
-        if role == DisplayRole and orientation == Horizontal:
-            if 0 <= section < len(self._headers):
-                return self._headers[section]
-        return None
+        # Верхние поля
+        self.layout_top = QHBoxLayout()
+        self.label_tops0 = QLabel("Наименование")
+        self.line_edit0 = QLineEdit()
+        self.label_tops1 = QLabel("Версия")
+        self.line_edit1 = QLineEdit()
+
+        self.layout_top.addWidget(self.label_tops0)
+        self.layout_top.addWidget(self.line_edit0)
+        self.layout_top.addWidget(self.label_tops1)
+        self.layout_top.addWidget(self.line_edit1)
+
+        self.layout_central.addLayout(self.layout_top)
+
+        # Таблица
+        self.table_view = QTableView()
+        self.layout_central.addWidget(self.table_view)
+
+        # Нижние кнопки
+        self.layout_buttons = QHBoxLayout()
+        self.button_add = QPushButton("Добавить компонент в рецептуру")
+        self.button_save = QPushButton("Сохранить")
+
+        self.layout_buttons.addWidget(self.button_add)
+        self.layout_buttons.addWidget(self.button_save)
+
+        self.layout_central.addLayout(self.layout_buttons)
+
+        self.button_save.clicked.connect(self.accept)
 
 
-model = SimpleModel()
 
-# Псевдо-константы, чтобы проверить разные варианты
-DisplayRole = 0
-Horizontal = 1
-Vertical = 2
+class ComboBoxDelegate(QStyledItemDelegate):
+    def __init__(self, items, parent=None):
+        super().__init__(parent)
+        self.items = items
 
-print(model.headerData(0, Horizontal, DisplayRole))  # "Наменклатура"
-print(model.headerData(1, Horizontal, DisplayRole))  # "Аналог_1"
-print(model.headerData(2, Horizontal, DisplayRole))  # "Аналог_2"
-print(model.headerData(3, Horizontal, DisplayRole))  # None, т.к. index 3 вне диапазона
-print(model.headerData(0, Vertical, DisplayRole))    # None, вертикальная ориентация
-print(model.headerData(0, Horizontal, 999))          # None, не DisplayRole
+    def createEditor(self, parent, option, index):
+        combo = QComboBox(parent)
+        combo.addItems(self.items)
+        return combo
+
+    def setEditorData(self, editor, index):
+        value = index.data(Qt.DisplayRole)
+        i = editor.findText(value)
+        if i >= 0:
+            editor.setCurrentIndex(i)
+
+    def setModelData(self, editor, model, index):
+        model.setData(index, editor.currentText(), Qt.EditRole)
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = WindowRecipe()
+    window.show()
+    sys.exit(app.exec_())
