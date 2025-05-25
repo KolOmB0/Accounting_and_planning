@@ -34,7 +34,7 @@ class NameAndNomenclature:
         table_view.resizeColumnsToContents()
         table_view.setAlternatingRowColors(True)
 
-    def load_from_db(self, db_path):
+    def load_from_db(self, db_path = db_path):
         try:
             conn = sqlite3.connect(db_path)
             cursor = conn.cursor()
@@ -42,8 +42,9 @@ class NameAndNomenclature:
             # Получаем названия колонок
             cursor.execute("PRAGMA table_info(Unique_nomenclature)")
             headers = [info[1] for info in cursor.fetchall()]
+            headers = [headers[1]]
 
-            cursor.execute(f"SELECT * FROM Unique_nomenclature")
+            cursor.execute(f"SELECT Наменклатура FROM Unique_nomenclature")
             data = cursor.fetchall()
 
             conn.close()
@@ -57,7 +58,7 @@ class NameAndNomenclature:
         try:
             conn = sqlite3.connect(db_path)
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM Unique_nomenclature")
+            cursor.execute("SELECT Наменклатура FROM Unique_nomenclature")
             data = cursor.fetchall()
             conn.close()
             return [row[0] for row in data]
